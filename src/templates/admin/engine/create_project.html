@@ -1,0 +1,56 @@
+{% extends 'admin/change_form.html' %}
+
+{% block extrahead %}
+
+<script type="text/javascript">
+
+var projecttype = new Array();
+{% for o in ProjectTypes %}
+projecttype[{{ o.id }}]={investment:{{o.initial_cost}},running:{{o.running_cost}},profit:{{o.profit}}};
+{% endfor %}
+
+function calculate() {
+
+	pt=parseInt(document.getElementById('id_type').value)
+	units=parseInt(document.getElementById('id_units').value)
+	participation=parseInt(document.getElementById('id_participation').value)
+        div=parseInt(document.getElementById('id_investment_div').value)
+
+	a=1.0
+	for (i=0;i<units-1;i++) {
+		a*=0.95
+	}
+
+        document.getElementById('id_monthly_investment').value = Math.round(projecttype[pt].investment*units*a*participation/100/div)
+	document.getElementById('id_running_costs').value = Math.round(projecttype[pt].running*participation/100)
+	document.getElementById('id_profit_estimate').value = Math.round(projecttype[pt].profit*participation/100)
+}
+
+window.onload = calculate;
+
+</script>
+
+{% endblock %}
+
+{% block form_top %}
+<p>You are about to create a project.</p>
+<p>Project will have 3 phases
+<ul>
+<li>Planning - waiting for other investors to join in</li>
+<li>Investing - all investors need to cover the investment costs</li>
+<li>Production - Collecting profit from successfull project</li>
+</ul>
+If the investment costs are too high, you should consider lowering your participation in the project and invite other companies to help out. Or lengthening the investment phase.
+</p>
+
+{% if addon %}<p>{{ addon }}</p>{% endif %}
+{% endblock %}
+
+{% block submit_buttons_bottom %}
+<div class="submit-row">
+<input type="submit" value="Start Project" class="default" name="_save" />
+</div>
+
+{% endblock %}
+
+

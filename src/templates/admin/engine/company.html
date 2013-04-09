@@ -1,0 +1,235 @@
+{% extends 'admin/change_form.html' %}
+
+{% load engine_extras %}
+{% load humanize %}
+{% load i18n %}
+
+{% block title %}{{ original.name }} Headquarters | Space Race{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block content %}<div id="content-main">
+<div class="company_left">
+<img width="390" src="http://upload.wikimedia.org/wikipedia/commons/c/c0/The_Park_Northpoint_-_Office_View.jpg" />
+</div>
+<div class="company_right">
+
+{% if not original %}
+
+<h1>Create a new company</h1>
+
+<form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
+  <div>
+  {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
+  {% if errors %}
+    <p class="errornote">
+    {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+    </p>
+    {{ adminform.form.non_field_errors }}
+  {% endif %}
+
+
+{% block field_sets %}
+{% for fieldset in adminform %}
+  {% include "admin/includes/fieldset.html" %}
+{% endfor %}
+{% endblock %}
+
+	<div class="submit-row">
+	  <input type="submit" value="Create Company" class="default" name="_save" />
+    </div>
+    <script type="text/javascript">document.getElementById("id_name").focus();</script>
+    <script type="text/javascript">
+(function($) {
+    var field;
+
+
+})(django.jQuery);
+    </script>
+  </div>
+</form>
+
+{% else %}
+
+<h1>{{ original.name }} Head Quarters</h1>
+
+<table>
+<tr><td>CTO:</td><td><a href="/admin/engine/person/{{ original.cto.pk }}">{{ original.cto.name }}</a></td><td class="small">{{ original.cto.salary|money }}</td><td>{% if cto_performance %}<img src="http://www.devx.com/assets/articlefigs/8426.gif" width="{{ cto_performance }}" height="9" alt="{{ cto_performance }}" />{% else %}<small>(performance will be estimated by {{ cto_performance_time|date:"h:i a" }})</small>{% endif %}</td></tr>
+<tr><td>COO:</td><td><a href="/admin/engine/person/{{ original.coo.pk }}">{{ original.coo.name }}</a></td><td class="small">{{ original.coo.salary|money }}</td><td>{% if coo_performance %}<img src="http://www.devx.com/assets/articlefigs/8426.gif" width="{{ coo_performance }}" height="9" alt="{{ coo_performance }}" />{% else %}<small>(performance will be estimated by {{ coo_performance_time|date:"h:i a" }})</small>{% endif %}</td></tr>
+<tr><td>CFO:</td><td><a href="/admin/engine/person/{{ original.cfo.pk }}">{{ original.cfo.name }}</a></td><td class="small">{{ original.cfo.salary|money }}</td><td>{% if cfo_performance %}<img src="http://www.devx.com/assets/articlefigs/8426.gif" width="{{ cfo_performance }}" height="9" alt="{{ cfo_performance }}" />{% else %}<small>(performance will be estimated by {{ cfo_performance_time|date:"h:i a" }})</small>{% endif %}</td></tr>
+</table>
+
+<h3>{{ original.last_money|money }}</h3>
+
+<table>
+{% for l in logs %}
+   <tr class="{% cycle 'row1' 'row2' %}">
+     <td>
+     {{ l.time|date:"h:i a" }}
+     </td>
+     <td class="float-right">
+     {{ l.money_delta|money }}
+     </td>
+     <td>{{ l.text }}</td></tr> 
+{% endfor %}
+</table>
+
+</div>
+
+<div style="clear:both;">
+
+{% if user.company == original and projectideas %}
+<div class="tabular inline-related ">
+  <fieldset class="module">
+    <h2>Project ideas</h2>   
+    <table>
+      <thead>
+      <tr>
+     	<th>Project name</th>
+        <th>Start project</th>
+      </tr>
+      </thead>
+      <tbody>
+     	{% for pi in projectideas %}     
+        <tr class="form-row {% cycle 'row1' 'row2' %} has_original dynamic-projectidea_set">
+        <td class="field-button_name">
+          <a href="/admin/engine/projecttype/{{ pi.project.pk }}">{{ pi.project.name }}</a>
+        </td>
+        <td class="field-button_start">
+          <a href="/admin/engine/project/add/?&amp;type={{ pi.project.pk }}">Start Project</a>
+        </td>
+        </tr>
+        {% endfor %}     
+      </tbody>
+    </table>
+  </fieldset>
+</div>
+{% endif %}
+
+{% if projects %}
+<div class="tabular inline-related ">
+  <fieldset class="module">
+    <h2>{{ original.name }}'s Project</h2>   
+    <table>
+      <thead>
+      <tr>
+     	<th>Project type</th>
+        <th>Project size</th>
+        <th>Participation</th>
+        <th>Phase</th>
+        <th>Invested</th>
+        {% if user.company == original %}
+        <th>Sell project participation</th>
+        <th>Drop project</th>
+        {% endif %}
+      </tr>
+      </thead>
+      <tbody>
+     	{% for inv in projects %}     
+        <tr class="form-row {% cycle 'row1' 'row2' %} has_original dynamic-investing_set">
+        <td class="field-button_name">
+          <a href="/admin/engine/project/{{ inv.project.pk }}">{{ inv.project.name }}</a>
+        </td>
+        <td class="field-size">
+          {{ inv.project.desc_units }}
+        </td>
+        <td class="field-participation">
+          {{ inv.participation }}%
+        </td>
+        <td class="field-phase">
+          {{ inv.project.desc_phase }}
+        </td>
+        <td class="field-invested">
+          {{ inv.invested|money }}
+        </td>
+        {% if user.company == original %}
+        <td class="button-sell">
+          <a href="/admin/engine/projectoffer/add/?&project={{inv.project.pk}}&percentage={{inv.participation}}"><img src="/static/img/sell.png" height="16" /> - Sell</a>
+        </td>
+        <td class="button-drop">
+          <a href="/admin/engine/project/action/drop/{{ inv.project.pk }}"><img src="/static/img/drop.png" height="16" /> - Drop</a>
+        </td>
+        {% endif %}     
+        </tr>
+        {% endfor %}     
+      </tbody>
+    </table>
+  </fieldset>
+</div>
+{% endif %}
+
+<div class="tabular inline-related ">
+  <fieldset class="module">
+    <h2>Shares owned</h2>   
+    <table>
+      <thead>
+      <tr>
+     	<th>Company name</th>
+        <th>Percentage</th>
+        {% if user.company == original %}
+        <th>Sell</th>
+        {% endif %}
+      </tr>
+      </thead>
+      <tbody>
+     	{% for s in shares_owned %}     
+        <tr class="form-row {% cycle 'row1' 'row2' %} has_original dynamic-sharesowned_set">
+        <td class="field-button_name">
+          <a href="/admin/engine/company/{{ s.company.pk }}">{{ s.company.name }}</a>
+        </td>
+        <td class="field-percentage">
+          {{s.percentage}}%
+        </td>
+        {% if user.company == original %}
+        <td class="field-button_sell">
+          <a href="/admin/engine/sharesoffer/add/?direction=S&company={{s.company.pk}}&percentage={{s.percentage}}"><img src="/static/img/sell.png" height="16" /> - Sell</a>
+        </td>
+        {% endif %}
+        </tr>
+        {% endfor %}     
+      </tbody>
+    </table>
+  </fieldset>
+</div>
+
+{% if shares_sold %}
+<div class="tabular inline-related ">
+  <fieldset class="module">
+    <h2>Shares sold</h2>   
+    <table>
+      <thead>
+      <tr>
+     	<th>Owning company</th>
+        <th>Percentage</th>
+        {% if user.company == original %}
+        <th>Buy back</th>
+        {% endif %}
+      </tr>
+      </thead>
+      <tbody>
+     	{% for s in shares_sold %}     
+        <tr class="form-row {% cycle 'row1' 'row2' %} has_original dynamic-sharesowned_set">
+        <td class="field-button_name">
+          <a href="/admin/engine/company/{{ s.owner.pk }}">{{ s.owner.name }}</a>
+        </td>
+        <td class="field-percentage">
+          {{s.percentage}}%
+        </td>
+        {% if user.company == original %}
+        <td class="field-button_buy">
+          <a href="/admin/engine/sharesoffer/add/?direction=B&company={{original.pk}}&percentage={{s.percentage}}"><img src="/static/img/buy.png" height="16" /> - Buy Back</a>
+        </td>
+        {% endif %}
+        </tr>
+        {% endfor %}     
+      </tbody>
+    </table>
+  </fieldset>
+</div>
+{% endif %}
+
+{% endif %}
+
+</div>
+
+</div>{% endblock %}

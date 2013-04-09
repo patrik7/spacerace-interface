@@ -1,0 +1,74 @@
+{% extends 'admin/base_site.html' %}
+
+{% block title %}Help | Space Race{% endblock %}
+
+{% block content %}
+
+<h1>Help</h1>
+
+<p>
+Space Race is a slow paced real time strategy game, where you can participate in human space exploration.
+</p>
+
+<p>
+You are a CEO of a huge research company pushing the borders of space exploration. Game objective is to have the best company at the end of era.
+</p>
+
+<h2>Starting ...</h2>
+
+<ul>
+<li>You should start by <a href="/admin/engine/company/add">creating a company</a>. Give it a good name.</li> 
+<li>You can see where you stand in comparison to other players by clicking the <i>Companies</i> button</li> 
+<li>Clicking at your company name button takes you to the company overview.</li> 
+<li>You should increase companies income by copying the <i>Basic Rocketry</i> project.</li> 
+<li>Click on <i>Projects</i> button, and click on copy, to replicate the existing project. (Keep participation at 100% and project size: single)</li> 
+<li>Feel free to shop around for better employees by visiting the <i>Job Market</i></li> 
+</ul>
+
+<h2>Company</h2>
+
+<p>
+Each player manages a single <a href="{{ company_url }}" >company</a>. It's an art of balancing expences, new investments and project income in a way that you can stay ahead of competion and keep positive cash balance.
+</p>
+
+<h3>Earning money</h3>
+<p>
+Money can be earn in 2 main ways: executing successful projects, investing in companies that are successful. Most assets: employees, projects right and company shares are tradable with other players.
+</p>
+
+<h2>Employees</h2>
+<p>
+Each company has 3 strategic employees. You can hire peole thru the <a href="/admin/engine/person/">Job Market</a>. The employees skills are not directly visible, you can only estimete them based on their resume.
+</p>
+<h3>Chief Technology Officer</h3>
+<p>
+Your CTO leads the research team, and he's very important for companie that aim to be the first developing cutting-edge space projects. His/her creativity skill increases the chance that your company wil lbe the first to come up with new project ideas.
+</p>
+<h3>Chief Operation Officer</h3>
+<p>
+Your COO takes care of all day to day management of the company: salaries, office rent, research equipment maintanance. His/her management skill directly influences your monthly running costs and more importantly projects running cost. Having a bad COO can really double your expenses.
+</p>
+<h3>Chief Financial Officer</h3>
+<p>
+Your CFO takes care of finance related planning and loans. Good CFO ensures your interest when having negative balance stays low and provides various analysis when exploring new projects.
+</p>
+
+<h2>Projects</h2>
+<p>
+Projects are the main source of income. You can either copy a project somebody else is already doing, although it will be patent protected at the beginning. Or you can start your own original project, in which case, your CTO has to have the idea first.
+</p>
+<h3>Project life cycle</h3>
+<p>
+Each project starts in the <i>planning phase</i> this is a period when other investors can join in and participate on the project.
+</p>
+<p>The next phase is the <i>investing phase</i>, when the remaing project questions have to get shape. All project participants share the cost of research and implementation. This is the most expensive phase of the project, when company has to have a lot of cash in order to for the company to survive this phase. You can try to sell your project share or drop it if money run too low.
+</p>
+<p>
+The project <i>production phase</i> is the period when project is finally making money for the company. Profit ad running cost is shared between all participants and is dependent on the current world demand and supply of the technology. After more competitors copy your project the profit for everyone will go down.
+</p>
+<p>
+At some point, running cost can be to high comparing to low profit, at this time it's best to drop the project.
+</p>
+
+{% endblock %}
+

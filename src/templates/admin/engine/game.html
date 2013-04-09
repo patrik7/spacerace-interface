@@ -1,0 +1,26 @@
+{% extends 'admin/base_site.html' %}
+
+{% block title %}Game | Space Race{% endblock %}
+
+{% block content %}
+
+<h1>Game</h1>
+
+<p>Start time: {{ game.starttime }} </p>
+<p>Month is {{ game.month }} minutes.</p>
+
+<h2>Current Demand</h2>
+
+<table>
+{% for name, value in demands %}
+<tr>
+  <td>{{ name }}</td>
+  <td><img src="http://www.devx.com/assets/articlefigs/8426.gif" height="9" width="{{ value }}" /></td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}
+

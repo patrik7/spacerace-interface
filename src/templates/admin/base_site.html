@@ -1,0 +1,33 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+ 
+{% block title %}{{ title }} | {% trans 'Space Race' %}{% endblock %}
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="/static/base.css" />
+{% endblock %}
+ 
+{% block branding %}
+<h1 id="site-name">{% trans 'Space Race' %}</h1>
+{% endblock %}
+ 
+{% block nav-global %}
+<div class="globnav" >
+{% if user.company %}
+<a href="/admin/engine/game">Game</a>
+<a href="/admin/engine/company/{{ user.company.pk }}">{{ user.company.name }}</a>
+<a href="/admin/engine/company">Companies</a>
+<a href="/admin/engine/project">Projects</a>
+<a href="/admin/engine/projectoffer">Projects Market</a>
+<a href="/admin/engine/sharesoffer">Shares Market</a>
+<a href="/admin/engine/person">Job Market</a>
+<a href="/admin/engine/help/?site={{title}}">Help</a>
+{% else %}
+<a href="/admin/engine/company/add">Create Company</a>
+<a href="/admin/engine/help">Help</a>
+{% endif %}
+</div>
+
+
+{% endblock %}
+
+
